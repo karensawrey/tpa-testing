@@ -1,3 +1,60 @@
+- name: Trigger Buildkite Pipeline
+  uses: buildkite/trigger-pipeline-action@v1.2.0
+
+name: learn-github-actions
+on: [push]
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm install -g bats
+      - run: bats -v
+
+
+
+
+workflow "Trigger a Buildkite Build" {
+  on = "push"
+  resolves = ["Build"]
+}
+
+action "Build" {
+  uses = "buildkite/trigger-pipeline-action@v1.2.0"
+  secrets = ["BUILDKITE_API_ACCESS_TOKEN"]
+  env = {
+    PIPELINE = "krnswry/my-deploy-pipeline"
+    COMMIT = "HEAD"
+    BRANCH = "main"
+    MESSAGE = ":github: Triggered from a GitHub Action"
+  }
+}
+
+
+
+
+
+workflow "Trigger a Buildkite Build" {
+  on = "push"
+  resolves = ["Build"]
+}
+
+action "Build" {
+  uses = "buildkite/trigger-pipeline-action@v1.2.0"
+  secrets = ["BUILDKITE_API_ACCESS_TOKEN"]
+  env = {
+    PIPELINE = "my-org/my-deploy-pipeline"
+    COMMIT = "HEAD"
+    BRANCH = "master"
+    MESSAGE = "<img class="emoji" title="github" alt=":github:" src="https://buildkiteassets.com/emojis/img-buildkite-64/github.png" draggable="false" /> Triggered from a GitHub Action"
+  }
+}
+
+
+
 
 # This is a basic workflow to help you get started with Actions
 
